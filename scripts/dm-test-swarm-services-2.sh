@@ -5,6 +5,7 @@ export MSYS_NO_PATHCONV=1
 eval $(docker-machine env swarm-test-1)
 
 docker service create --name registry \
+    --detach=false \
     -p 5000:5000 \
     --reserve-memory 100m \
     --mount "type=bind,source=$PWD,target=/var/lib/registry" \
@@ -37,6 +38,7 @@ done
 rm docker-compose-proxy.yml
 
 docker service create --name proxy \
+    --detach=false \
     -p 80:80 \
     -p 443:443 \
     -p 8090:8080 \
@@ -48,6 +50,7 @@ docker service create --name proxy \
     vfarcic/docker-flow-proxy
 
 docker service create --name go-demo-db \
+    --detach=false \
     --network go-demo \
     --constraint 'node.labels.env == prod-like' \
     mongo:3.2.10
@@ -75,6 +78,7 @@ while true; do
 done
 
 docker service create --name go-demo \
+    --detach=false \
     -e DB=go-demo-db \
     --network go-demo \
     --network proxy \
